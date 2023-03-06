@@ -15,6 +15,8 @@
 - - G:Goroutine
 - - M:Thread (Machine)
 - - P:Processor
+![image](https://user-images.githubusercontent.com/49135753/223052561-d8a6426e-26ea-43a9-a7f5-3cb8fd8ae850.png)
+
 
 # channel
 # buffered channel
