@@ -64,3 +64,7 @@
 # ticker
 
 - Ticker adalah representasi kejadian yang berulang, ketika waktu ticker expired maka event akan dikirim ke channel. Untuk membuat ticker kita bisa menggunakan timeNewTicker(duration). Dan untuk menghentikannya kita bisa menggunakan TickerStop().
+
+# Sumber
+- https://go.rendy.dev/
+- https://www.youtube.com/watch?v=dpJhTYqWOrE
