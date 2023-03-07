@@ -18,8 +18,10 @@
 
 ![image](https://user-images.githubusercontent.com/49135753/223052561-d8a6426e-26ea-43a9-a7f5-3cb8fd8ae850.png)
 
-
 # channel
+
+![image](https://user-images.githubusercontent.com/49135753/223309495-f7f4a7fb-2d6c-49b3-a565-7bd3b7e015b8.png)
+
 # buffered channel
 # mutex
 # waitgroup
