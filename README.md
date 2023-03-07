@@ -19,6 +19,14 @@
 ![image](https://user-images.githubusercontent.com/49135753/223052561-d8a6426e-26ea-43a9-a7f5-3cb8fd8ae850.png)
 
 # channel
+- Secara default chanel hanya bisa menampung satu data, jika ingin menambah lagi harus menunggu data yang ada di channel diambil.
+- Chanel hanya bisa menerima satu jenis data.
+- Chanel bisa diambil dari lebih dari satu goroutine.
+- Chanel harus di close jika tidak digunakan (memory leak).
+- Channel bisa digunakan untuk mengirim dan menerima data
+- Untuk mengirim data : channel <- data
+- Untuk menerima data : data <- channel
+- Jika selesai jangan lupa tutup chanel dengan close()
 
 ![image](https://user-images.githubusercontent.com/49135753/223309495-f7f4a7fb-2d6c-49b3-a565-7bd3b7e015b8.png)
 
