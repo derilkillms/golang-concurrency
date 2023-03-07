@@ -58,6 +58,7 @@ func TestOnce(t *testing.T) {
 // Pool ini digunakan untuk menyimpan data, selanjutnya untuk menggunakan datanya kita bisa mengambil data dari Pool, dan setelah selesai menggunakan datanya, kita bisa menyimpan kembali ke Pool nya
 func TestPool(t *testing.T) {
 	pool := sync.Pool{
+		//memberikan nilai default supaya tidak nil ketika sedang menunggu data
 		New: func() interface{} {
 			return "Default"
 		},
@@ -81,4 +82,68 @@ func TestPool(t *testing.T) {
 
 	group.Wait()
 	fmt.Println("Selesai")
+}
+
+//Golang memiliki sebuah struct bernama sync.Map,
+//Map ini mirip dengan golang Map yang sudah kita coba sebelumnya,
+// namun yang membedakan Map ini aman untuk menggunakan concurrent menggunakan goroutine.
+//Store(key, value)	Untuk menyimpan data ke map
+// Load(key)	Untuk mengambil data dari map menggunakan key
+// Delete(key)	Untuk menghapus data di map menggunakan key
+// Range(function(key, value))	Digunakan untuk melakukan iterasi seluruh data di map
+
+func AddToMap(data *sync.Map, value int, group *sync.WaitGroup) {
+	defer group.Done()
+	data.Store(value, value)
+}
+
+func TestMap(t *testing.T) {
+	data := &sync.Map{}
+	group := &sync.WaitGroup{}
+	for i := 0; i < 100; i++ {
+		group.Add(1)
+		go AddToMap(data, i, group)
+	}
+	group.Wait()
+	data.Range(func(key, value any) bool {
+		fmt.Println(key, ":", value)
+		return true
+	})
+}
+
+// Cond adalah implementasi locking berbasis kondisi, cond membutuhkan locker(Mutex atau RWMutex) untuk implementasi locking nya, namun berbeda dengan locker biasanya, di cond terdapat function Wait() untuk menunggu apakah perlu menunggu atau tidak
+// Jadi nanti saat setelah kita melakukan locking di dalam condition ini kita akan memanggil Wait(), jadi nanti jika menurut condition tersebut kita harus menunggu maka kita akan menunggu.
+// Setelah menggunakan Wait(), kita bisa menggunakan function Signal() untuk memberitahu sebuah goroutine agar tidak perlu menunggu lagi, sedangkan function Broadcast() digunakan untuk memberitahu semua goroutine untuk tidak perlu menunggu lagi. Untuk membuat cond kita bisa menggunakan sync.NewCond(Locker).
+
+var locker = sync.Mutex{}
+var cond = sync.NewCond(&locker)
+var group = sync.WaitGroup{}
+
+func WaitCondition(value int) {
+	defer group.Done()
+
+	cond.L.Lock()
+	cond.Wait()
+
+	fmt.Println("Done", value)
+	cond.L.Unlock()
+}
+
+func TestCond(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		group.Add(1)
+		go WaitCondition(i)
+	}
+	go func() {
+		for i := 0; i < 10; i++ {
+			time.Sleep(1 * time.Second)
+
+			//signal untuk menunggu dan terhenti sementara
+			cond.Signal()
+
+			//broadcast tidak perlu menunggu lagi
+			// cond.Broadcast()
+		}
+	}()
+	group.Wait()
 }
